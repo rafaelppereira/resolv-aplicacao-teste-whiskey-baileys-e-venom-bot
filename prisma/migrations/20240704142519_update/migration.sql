@@ -1,0 +1,4 @@
+-- CreateTable
+CREATE TABLE "WhatsApp" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT
+);

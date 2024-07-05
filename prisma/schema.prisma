@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id Int @id @default(autoincrement())
+
+  name String @unique
+
+  whatsapps Connection[]
+  users     User[]
+
+  createdAt DateTime  @default(now())
+  updateAt  DateTime?
+}
+
+model Connection {
+  id Int @id @default(autoincrement())
+
+  name              String  @unique
+  session           String
+  qrcode            String
+  status            String
+  plugged           String
+  retries           Int
+  greetingMessage   String
+  farewellMessage   String
+  complationMessage String
+  outOfHoursMessage String
+  ratingMessage     String
+  provider          String
+  isDefault         Boolean
+
+  token            String
+  maxUseBotQueues  Int
+  timeUseBotQueues Int
+
+  Organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId Int?
+
+  users User[]
+
+  createdAt DateTime  @default(now())
+  updateAt  DateTime?
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  name   String
+  online Boolean
+
+  Organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId Int?
+
+  Connection   Connection? @relation(fields: [connectionId], references: [id])
+  connectionId Int?
+
+  createdAt DateTime  @default(now())
+  updateAt  DateTime?
+}
